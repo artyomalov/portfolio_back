@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ImageModel, ProjectModel, PreviewModel
+from .models import ImageModel, PreviewModel
 import os
 
 
@@ -19,23 +19,15 @@ class PreviewModelSerializer(serializers.Serializer):
         return ImageModel.objects.create(**validated_data)
 
     def update(self,
-               instance: ImageModel,
+               instance: PreviewModel,
                validated_data: dict,
                ):
-        old_preview = instance.image_link
-        path_to_old_preview = os.path.join(
-            os.path.abspath('.'),
-            'media',
-            'previews',
-            str(old_preview).replace('/', '\\')
-        )
-        if path_to_old_preview is not None:
-            if os.path.exists(path=path_to_old_preview):
-                os.remove(path_to_old_preview)
         instance.preview = validated_data.get(
             'preview',
             instance.preview
         )
+        instance.alt_description = validated_data.get('alt_description',
+                                                      instance.alt_description)
         return instance
 
 
@@ -58,20 +50,12 @@ class ImageModelSerializer(serializers.Serializer):
                instance: ImageModel,
                validated_data: dict,
                ):
-        old_image_link = instance.image_link
-        path_to_old_image_link = os.path.join(
-            os.path.abspath('.'),
-            'media',
-            'images',
-            str(old_image_link).replace('/', '\\')
-        )
-        if path_to_old_image_link is not None:
-            if os.path.exists(path=path_to_old_image_link):
-                os.remove(path_to_old_image_link)
         instance.image_link = validated_data.get(
             'image_link',
             instance.image_link
         )
+        instance.alt_description = validated_data.get('alt_description',
+                                                      instance.alt_description)
         return instance
 
 
@@ -79,8 +63,6 @@ class ProjectModelSerializerPreview(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=512)
     preview = serializers.SerializerMethodField(method_name='get_preview_url')
-
-    # preview = PreviewModelSerializer(many=False, required=True)
 
     def get_preview_url(self, obj):
         preview = obj.project_preview.preview
@@ -98,8 +80,6 @@ class ProjectModelSerializerImages(serializers.Serializer):
     title = serializers.CharField(max_length=512)
     description = serializers.CharField(max_length=4000)
     designer_name = serializers.CharField(max_length=128)
-    # images = ImageModelSerializer(many=True, required=True)
-
     images = serializers.SerializerMethodField(method_name='get_image_url')
 
     def get_image_url(self, obj):
@@ -111,3 +91,16 @@ class ProjectModelSerializerImages(serializers.Serializer):
             in
             images]
         return images_data
+
+
+   #
+   # old_preview = instance.image_link
+   #      path_to_old_preview = os.path.join(
+   #          os.path.abspath('.'),
+   #          'media',
+   #          'previews',
+   #          str(old_preview).replace('/', '\\')
+   #      )
+   #      if path_to_old_preview is not None:
+   #          if os.path.exists(path=path_to_old_preview):
+   #              os.remove(path_to_old_preview)
