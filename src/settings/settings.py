@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    'image.apps.ImageConfig',
+    'projects.apps.ProjectsConfig',
     'services.apps.ServicesConfig',
 
     'django_cleanup.apps.CleanupConfig',
@@ -118,8 +118,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'deployment', 'media')
-MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -135,3 +138,4 @@ REST_FRAMEWORK = {
 }
 
 ADMIN_SITE_HEADER = "Portfolio admin"
+BASE_URL = "http://localhost:8000/"
