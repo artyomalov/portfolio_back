@@ -3,7 +3,6 @@ from .models import ServiceModel
 from .serializers import ServiceModelSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
-# from django.http import Http404
 
 
 class GetServices(APIView):

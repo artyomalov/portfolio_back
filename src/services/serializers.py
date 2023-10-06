@@ -4,9 +4,12 @@ from .models import ServiceModel
 
 class ServiceModelSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    service_title = serializers.CharField(max_length=512)
-    service_price = serializers.CharField(max_length=100)
-    service_info = serializers.CharField(max_length=4000)
+    serviceTitle = serializers.CharField(max_length=512,
+                                         source='service_title')
+    servicePrice = serializers.CharField(max_length=100,
+                                         source='service_price')
+    serviceInfo = serializers.CharField(max_length=4000,
+                                        source='service_info')
 
     def create(self, validated_data: dict):
         return ServiceModel.objects.create(**validated_data)

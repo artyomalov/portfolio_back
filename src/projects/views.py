@@ -8,9 +8,6 @@ from .serializers import ProjectModelSerializerPreview, \
     ProjectModelSerializerImages
 
 
-
-
-
 class GetProjects(APIView):
     """
     List all projects
@@ -37,8 +34,9 @@ class GetProject(APIView):
         except ProjectModel.DoesNotExist:
             raise Http404
 
-    def get(self, request: Request, pk: int, format=None):
-        project = self.get_object(pk)
+    def get(self, request: Request, pk: str, format=None):
+        pk_to_number = int(pk)
+        project = self.get_object(pk_to_number)
         serializer = ProjectModelSerializerImages(
             project,
             context={'base_url': settings.BASE_URL}

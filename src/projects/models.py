@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -17,12 +18,12 @@ class ProjectModel(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
-
-    def __str__(self):
-        return self.title
 
 
 def upload_to_preview(instance, filename):
@@ -31,7 +32,9 @@ def upload_to_preview(instance, filename):
 
 class PreviewModel(models.Model):
     preview = models.ImageField(
-        upload_to=upload_to_preview
+        upload_to=upload_to_preview,
+        null=False,
+        blank=False
     )
     alt_description = models.CharField(
         default='project preview',
@@ -42,16 +45,16 @@ class PreviewModel(models.Model):
     related_project = models.OneToOneField(
         to=ProjectModel,
         on_delete=models.CASCADE,
-        null=True, blank=False,
+        null=False, blank=False,
         related_name='project_preview'
     )
+
+    def __str__(self):
+        return f'{self.related_project.title}_{self.id}'
 
     class Meta:
         verbose_name = 'preview'
         verbose_name_plural = 'previews'
-
-    def __str__(self):
-        return f'{self.related_project.title}_{self.id}'
 
 
 def upload_to_image(instance, filename):
@@ -77,7 +80,7 @@ class ImageModel(models.Model):
     )
 
     class Meta:
-        verbose_name = 'projects'
+        verbose_name = 'image'
         verbose_name_plural = 'images'
 
     def __str__(self):

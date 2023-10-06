@@ -14,8 +14,6 @@ class PreviewModelSerializer(serializers.Serializer):
     )
 
 
-
-
 class ImageModelSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     image_link = serializers.ImageField(
@@ -27,8 +25,6 @@ class ImageModelSerializer(serializers.Serializer):
         allow_null=False,
         max_length=200
     )
-
-
 
 
 class ProjectModelSerializerPreview(serializers.Serializer):
@@ -50,7 +46,8 @@ class ProjectModelSerializerImages(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=512)
     description = serializers.CharField(max_length=4000)
-    designer_name = serializers.CharField(max_length=128)
+    designerName = serializers.CharField(max_length=128,
+                                         source='designer_name')
     images = serializers.SerializerMethodField(method_name='get_image_url')
 
     def get_image_url(self, obj):
@@ -62,5 +59,3 @@ class ProjectModelSerializerImages(serializers.Serializer):
             in
             images]
         return images_data
-
-
